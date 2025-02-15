@@ -1,4 +1,3 @@
-// Computer Choice
 function getComputerChoice() {
     let number = Math.floor(Math.random() * 100 + 1)
     let choice
@@ -12,81 +11,55 @@ function getComputerChoice() {
     return choice;
 }
 
-// Human Choice
-function fixHumanChoice(choice) {
-    let char = choice.charAt(0).toUpperCase();
-    let rest = choice.slice(1, choice.length).toLowerCase();
-    let fixedChoice = char + rest
+function chosenValues(human, computer) {
+    let player = document.querySelector('#playerSelect')
+    let comp = document.querySelector('#computerSelect')
 
-    return fixedChoice;
-}
-
-function getHumanChoice() {
-    let human = prompt("Enter Rock, Paper or Sissors: ");
-    let check = human.toUpperCase();
-
-    while (check == null || check != "ROCK" && check != "PAPER" && check != "SISSORS") {
-        human = prompt("Enter Rock, Paper or Sissors: ");
-        check = human.toUpperCase();
-    }
-    let humanChoice = fixHumanChoice(human);
-
-    return humanChoice;
+    player.textContent = `You selected: ${human}`
+    comp.textContent = `Computer selected: ${computer}`
 }
 
 function playRound(humanChoice, computerChoice) {
-    let winnerText
     let winner
-    console.log("Computer Choice: " + computerChoice)
-    console.log("Your Choice: " + humanChoice)
+
+    chosenValues(humanChoice, computerChoice)
+
     if (computerChoice == "Paper" && humanChoice == "Rock" ||
         computerChoice == "Sissors" && humanChoice == "Paper" ||
         computerChoice == "Rock" && humanChoice == "Sissors"
     ) {
-        winnerText = "You lose! " + computerChoice + " beats " + humanChoice
         winner = 0;
     } else if (computerChoice == humanChoice) {
-        winnerText = "It's a tie!"
     } else {
-        winnerText = "You win! " + humanChoice + " beats " + computerChoice
         winner = 1;
     }
-
-    console.log(winnerText)
-    console.log("-------------------------------------------------------")
     return winner;
 }
 
 function playGame() {
-    humanScore = 0;
-    computerScore = 0;
+    let humanScore = 0;
+    let computerScore = 0;
     let winner;
-    
-    alert("We are playing a game of Rock Paper Sissors up to 5 rounds")
-    
-    for (i = 0; i < 5; i++) {
-        let result = playRound(getHumanChoice(), getComputerChoice())
-        
-        if (result == 0) {
-            computerScore++
-        } else if (result == 1) {
-            humanScore++
+
+    let selections = document.querySelector('#selectors')
+    let score = document.querySelector('#scores')
+    let win = document.querySelector('#winner')
+
+    selections.addEventListener('click', (e) => {
+        if (humanScore >= 5 || computerScore >= 5) {
+            win.textContent = humanScore > computerScore ? 'You Win!' : 'You Lose :('
+            e.target.preventDefault();
+            
         }
-    }
+        let humanChoice = e.target.id;
+        winner = playRound(humanChoice, getComputerChoice())
 
-    if (computerScore > humanScore) {
-        winner = "Winner is Computer"
-    } else if (humanScore > computerScore){
-        winner = "Winner is Human"
-    } else {
-        winner = "It's a Tie"
-    }
 
-    return winner
+    winner == 1 ? humanScore++ : computerScore++;
+    score.textContent = `Your Score: ${humanScore} \nComputer Score: ${computerScore}`
+    })
 
 }
 
 
-
-console.log(playGame())
-
+playGame();
